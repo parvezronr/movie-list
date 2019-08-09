@@ -1,0 +1,149 @@
+<% @genres.each do |genre| %>
+  <div class="genre">    
+    <% genre.movies.where(deleted: false).each do |m| %>
+        <%= render partial: 'genres/movie', locals: {movie: m} %>
+      <% end %>
+      </div>      
+      <div class="new-movie" >
+          <input name="new_movie" class ="new_movie" type="text"> </input>
+          <input name="year" class ="year" type="text"> </input>
+          <button class="create btn btn-primary">Add</button>
+          <button class="cancel btn btn-danger">Cancel</button>
+      </div>
+
+    <div class="content">
+      <div class="movies">
+        <% genre.movies.where(deleted: false).each do |m| %>
+          <%= render partial: 'movies/movie', locals: {movie: m} %>
+        <% end %>
+      </div>      
+      <div class="new-movie" >
+          <input name="new_movie" class ="new_movie" type="text"> </input>
+          <input name="year" class ="year" type="text"> </input>
+          <button class="create btn btn-primary">Add</button>
+          <button class="cancel btn btn-danger">Cancel</button>
+      </div>
+    </div>       
+  </div>  
+<% end %>
+
+<p id="notice"><%= notice %></p>
+
+<script>
+$(document).ready(function(){
+  $('.collapsible').click(function(){ 
+    $(this).next().toggle();      
+  })  
+
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+  });
+
+  $('.mov-add').click(function(){    
+    var mov = $(this).parents('.genre').find('.new-movie');
+    mov.toggle();
+    mov.scrollTop();    
+  })
+
+  $('.create').click(function(){        
+    var genre = $(this).parents('.genre')
+        movie_form = genre.find('.new-movie');
+        name = movie_form.find('.new_movie').val(),
+        year = movie_form.find('.year').val(),
+        genre_id = genre.find(".collapsible").data('id'),
+        movie_params = {name: name, year: year, genre_id: genre_id}        
+
+    jQuery.ajax({
+      type: "POST",
+      url: '/movies', 
+      data: { authenticity_token: $('[name="csrf-token"]')[0].content, movie: movie_params},     
+      success: function(data) {        
+        genre.find('.movies').append(data.movie);
+        movie_form.toggle();
+      },
+      error: function(jqXHR) {        
+      }
+    }); 
+    return false 
+
+  })
+
+  $(document).on('click', '.movies .mov-delete', function(){        
+    var collapsible_ext = $(this).parents('.collapsible-ext');
+    var movie_id = $(this).parent().data('id');
+    var url = "movies/" + movie_id
+
+    jQuery.ajax({
+      type: "DELETE",
+      url: url, 
+      data: { authenticity_token: $('[name="csrf-token"]')[0].content},     
+      success: function(data) {
+        collapsible_ext.remove();
+      },
+      error: function(jqXHR) {        
+      }
+    }); 
+    return false 
+  })
+
+  $(document).on('click', '.movies .mov-soft-delete', function(){       
+    var collapsible_ext = $(this).parents('.collapsible-ext');
+    var movie_id = collapsible_ext.data('id');    
+    var url = "movies/" + movie_id  + "/soft_delete"    
+
+    jQuery.ajax({
+      type: "PATCH",
+      url: url,
+      data: { authenticity_token: $('[name="csrf-token"]')[0].content},         
+      success: function(data) {
+        collapsible_ext.remove();
+      },
+      error: function(jqXHR) {        
+      }
+    });  
+
+    return false;
+  })  
+
+  $('.add').click(function(){        
+    $(".new-genre").toggle();
+    $(".new-genre").find('input').focus();
+  })  
+
+  $('.delete').click(function(){        
+    var collapsible = $(this).parents('.collapsible');
+    var genre_id = $(this).parent().data('id');
+    var url = "genres/" + genre_id
+
+    jQuery.ajax({
+      type: "DELETE",
+      url: url,   
+      data: { authenticity_token: $('[name="csrf-token"]')[0].content},   
+      success: function(data) {
+        collapsible.remove();
+      },
+      error: function(jqXHR) {        
+      }
+    });  
+  })
+
+  $('.soft-delete').click(function(){        
+    var collapsible = $(this).parents('.collapsible');
+    var genre_id = $(this).parent().data('id');
+    var url = "genres/" + genre_id  + "/soft_delete"    
+
+    jQuery.ajax({
+      type: "PATCH",
+      url: url,
+      data: { authenticity_token: $('[name="csrf-token"]')[0].content},     
+      success: function(data) {
+        collapsible.remove();
+      },
+      error: function(jqXHR) {        
+      }
+    });  
+  })
+
+})
+
+</script>

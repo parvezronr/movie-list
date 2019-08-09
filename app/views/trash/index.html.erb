@@ -1,0 +1,87 @@
+<p id="notice"><%= notice %></p>
+<h3>All Trashed Content</h3>
+
+<button class="collapsible">Genres
+<span class="actions ">
+  <%= fa_icon "chevron-down" %>
+</span>
+</button>
+<div class="content">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @genres.each do |genre| %>
+        <tr>
+          <td data-id="<%= genre.id %>"><%= genre.name %></td>
+          <td class="gen-restore">
+            <button type="button" class="btn btn-primary">Restore</button>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+<button class="collapsible">Movies
+  <span class="actions ">
+    <%= fa_icon "chevron-down" %>
+  </span>
+</button>
+<div class="content">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th colspan="1"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @movies.each do |movie| %>
+        <tr data-id="<%= movie.id %>">
+          <td ><%= movie.name %></td>
+          <td class="mov-restore">
+            <button type="button" class="btn btn-primary">Restore</button>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+<script>
+  $(document).ready(function(){
+    
+    $('.collapsible').click(function(){      
+      $(this).next().toggle();      
+    })
+
+    $(document).on('click', '.mov-restore', function(){     
+  debugger        
+      var movie_row = $(this).parents('tr'),
+          movie_id = movie_row.data('id'),        
+          url = '/movies/' + movie_id + '/restore';
+
+      jQuery.ajax({
+        type: "PATCH",
+        url: url,
+        data: { authenticity_token: $('[name="csrf-token"]')[0].content},         
+        success: function(data) {
+          movie_row.remove();
+        },
+        error: function(jqXHR) {        
+        }
+      });  
+
+    return false;
+  })
+  })    
+</script>
