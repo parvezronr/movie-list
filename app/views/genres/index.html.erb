@@ -1,15 +1,16 @@
+<div class="new-gen" >
+  <button class="gen-add btn btn-primary">Add Genre</button>
+</div>
 <% @genres.each do |genre| %>
-  <div class="genre">    
-    <% genre.movies.where(deleted: false).each do |m| %>
-        <%= render partial: 'genres/movie', locals: {movie: m} %>
-      <% end %>
-      </div>      
-      <div class="new-movie" >
-          <input name="new_movie" class ="new_movie" type="text"> </input>
-          <input name="year" class ="year" type="text"> </input>
-          <button class="create btn btn-primary">Add</button>
-          <button class="cancel btn btn-danger">Cancel</button>
-      </div>
+  <div class="genre">
+    <button class="collapsible" data-id="<%= genre.id %>"><%= genre.name %><span> (Movies Count-<%= genre.movies.where(deleted: false).count %>)</span>
+      <span class="actions delete" data-toggle="tooltip" title="Delete">
+        <%= fa_icon "minus-circle" %>
+      </span>
+      <span class="actions soft-delete" data-toggle="tooltip" title="Trash">
+        <%= fa_icon "trash" %>
+      </span>     
+    </button>
 
     <div class="content">
       <div class="movies">
@@ -18,10 +19,10 @@
         <% end %>
       </div>      
       <div class="new-movie" >
-          <input name="new_movie" class ="new_movie" type="text"> </input>
-          <input name="year" class ="year" type="text"> </input>
+          <input name="new_movie" class ="new_movie" type="text">Name</input>
+          <input name="year" class ="year" type="numaric">Year</input>
           <button class="create btn btn-primary">Add</button>
-          <button class="cancel btn btn-danger">Cancel</button>
+          <!-- <button class="cancel btn btn-danger">Cancel</button> -->
       </div>
     </div>       
   </div>  
@@ -41,6 +42,12 @@ $(document).ready(function(){
 
   $('.mov-add').click(function(){    
     var mov = $(this).parents('.genre').find('.new-movie');
+    mov.toggle();
+    mov.scrollTop();    
+  })
+
+  $('.gen-add').click(function(){    
+    var mov = $(this).parents('.genre').find('.new-gen');
     mov.toggle();
     mov.scrollTop();    
   })
@@ -65,7 +72,25 @@ $(document).ready(function(){
       }
     }); 
     return false 
+  })
 
+  $('.gen-create').click(function(){        
+    var genre = $(this).parents('.genre')
+        gen_form = genre.find('.new-gen');
+        name = gen_form.find('.new_gen').val(),
+        gen_params = {name: name}        
+
+    jQuery.ajax({
+      type: "POST",
+      url: '/genres', 
+      data: { authenticity_token: $('[name="csrf-token"]')[0].content, genres: gen_params},     
+      success: function(data) {        
+        gen_form.toggle();
+      },
+      error: function(jqXHR) {        
+      }
+    }); 
+    return false 
   })
 
   $(document).on('click', '.movies .mov-delete', function(){        

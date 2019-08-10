@@ -16,8 +16,8 @@
 
     <tbody>
       <% @genres.each do |genre| %>
-        <tr>
-          <td data-id="<%= genre.id %>"><%= genre.name %></td>
+        <tr data-id="<%= genre.id %>">
+          <td><%= genre.name %></td>
           <td class="gen-restore">
             <button type="button" class="btn btn-primary">Restore</button>
           </td>
@@ -46,7 +46,7 @@
     <tbody>
       <% @movies.each do |movie| %>
         <tr data-id="<%= movie.id %>">
-          <td ><%= movie.name %></td>
+          <td ><%= movie.name %> <span> (<%= movie.year %>)</span></td>
           <td class="mov-restore">
             <button type="button" class="btn btn-primary">Restore</button>
           </td>
@@ -65,7 +65,6 @@
     })
 
     $(document).on('click', '.mov-restore', function(){     
-  debugger        
       var movie_row = $(this).parents('tr'),
           movie_id = movie_row.data('id'),        
           url = '/movies/' + movie_id + '/restore';
@@ -80,8 +79,25 @@
         error: function(jqXHR) {        
         }
       });  
-
     return false;
-  })
+    })
+
+    $(document).on('click', '.gen-restore', function(){  
+      var genre_row = $(this).parents('tr'),
+          genre_id = genre_row.data('id'),        
+          url = '/genres/' + genre_id + '/restore';
+
+      jQuery.ajax({
+        type: "PATCH",
+        url: url,
+        data: { authenticity_token: $('[name="csrf-token"]')[0].content},         
+        success: function(data) {
+          genre_row.remove();
+        },
+        error: function(jqXHR) {        
+        }
+      });  
+    return false;
+    })
   })    
 </script>

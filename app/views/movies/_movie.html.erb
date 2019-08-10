@@ -1,11 +1,11 @@
-<button class="collapsible-ext" data-id="<%= movie.id %>"><%=  movie.name %>
-	<span class="actions mov-add">
+<button class="collapsible-ext" data-id="<%= movie.id %>"><%=  movie.name %><span> (<%= movie.year %>)</span>
+	<span class="actions mov-add" data-toggle="tooltip" title="Add Movie">
 		<%= fa_icon "plus-circle" %>
 	</span>
-	<span class="actions mov-delete">
+	<span class="actions mov-delete" data-toggle="tooltip" title="Delete">
 		<%= fa_icon "minus-circle" %>
 	</span>
-	<span class="actions mov-soft-delete">
+	<span class="actions mov-soft-delete" data-toggle="tooltip" title="Trash">
 		<%= fa_icon "trash" %>
 	</span>	 	
 </button>
