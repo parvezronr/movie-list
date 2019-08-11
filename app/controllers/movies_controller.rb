@@ -4,7 +4,7 @@ class MoviesController < ApplicationController
   # GET /movies
   # GET /movies.json
   def index
-    @movies = Movie.where(deleted: false) #!!!! Todo: pull the soft delte logic into a common module or concern.    
+    @movies = Movie.where(deleted: false) #!!!! Todo: pull the soft delte logic into a common module or concern.
   end
 
   # GET /movies/new
@@ -26,7 +26,7 @@ class MoviesController < ApplicationController
       render json: {movie: movie, message: 'Success'}, status: :ok
     else
       render json: {message: 'Error'}, status: :bad_request
-    end    
+    end
   end
 
   # PATCH/PUT /movies/1
@@ -44,14 +44,14 @@ class MoviesController < ApplicationController
   end
 
   def soft_delete
-    @movie.update_attribute(:deleted, true)       
-      
+    @movie.update_attribute(:deleted, true)
+
     render json: {message: 'Success'}, status: :ok
   end
 
   def restore
-    @movie.update_attribute(:deleted, false)       
-      
+    @movie.update_attribute(:deleted, false)
+
     render json: {message: 'Success'}, status: :ok
   end
 

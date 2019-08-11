@@ -1,0 +1,28 @@
+<div id="genre-wrapper" class="genre">
+  <%
+    movies = genre.movies.where(deleted: false)
+    movies_count = movies.size
+  %>
+  <button class="collapsible" data-id="<%= genre.id %>"><%= genre.name %><span> (Movies Count-<%= movies_count %>)</span>
+    <span class="actions delete" data-toggle="tooltip" title="Delete">
+      <%= fa_icon "minus-circle" %>
+    </span>
+    <span class="actions soft-delete" data-toggle="tooltip" title="Trash">
+      <%= fa_icon "trash" %>
+    </span>
+  </button>
+
+  <div class="content">
+    <div class="movies">
+      <% movies.find_each do |m| %>
+        <%= render partial: 'movies/movie', locals: {movie: m} %>
+      <% end %>
+    </div>
+    <div class="new-movie collapse <%= 'in' if (movies_count==0) %>" >
+        <input name="new_movie" class ="new_movie" type="text" placeholder="name"></input>
+        <input name="year" class ="year" type="numaric" placeholder="year"></input>
+        <button class="create btn btn-primary">Add</button>
+        <!-- <button class="cancel btn btn-danger">Cancel</button> -->
+    </div>
+  </div>
+</div>

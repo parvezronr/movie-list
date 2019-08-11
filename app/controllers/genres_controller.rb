@@ -26,14 +26,11 @@ class GenresController < ApplicationController
   def create
     @genre = Genre.new(genre_params)
 
-    respond_to do |format|
-      if @genre.save
-        format.html { redirect_to @genre, notice: 'Genre was successfully created.' }
-        format.json { render :show, status: :created, location: @genre }
-      else
-        format.html { render :new }
-        format.json { render json: @genre.errors, status: :unprocessable_entity }
-      end
+    if @genre.save
+      genre = render_to_string(partial: 'genres/genre', locals: {genre: @genre})
+      render json: {genre: genre, message: 'Success'}, status: :ok
+    else
+      render json: {message: 'Error'}, status: :bad_request
     end
   end
 
@@ -52,14 +49,14 @@ class GenresController < ApplicationController
   end
 
   def soft_delete
-    @genre.update_attribute(:deleted, true)       
-      
+    @genre.update_attribute(:deleted, true)
+
     render json: {message: 'Success'}, status: :ok
   end
 
   def restore
-    @genre.update_attribute(:deleted, false)       
-      
+    @genre.update_attribute(:deleted, false)
+
     render json: {message: 'Success'}, status: :ok
   end
 
