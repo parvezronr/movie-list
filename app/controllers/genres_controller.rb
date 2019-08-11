@@ -65,7 +65,7 @@ class GenresController < ApplicationController
   def destroy
     @genre.destroy
     respond_to do |format|
-      format.html { redirect_to genres_url, notice: 'Genre was successfully destroyed.' }
+      format.html { redirect_to genres_url, notice: 'Success..!' }
       format.json { head :no_content }
     end
   end
