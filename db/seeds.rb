@@ -12,4 +12,3 @@
   movies = Movie.create([{ name: 'Star Wars', year: 2018, genre_id: Genre.first(2).last.id}, { name: 'Lord of the Rings', year: 2001, genre_id: Genre.first(2).last.id}])
   movies = Movie.create([{ name: 'Star Wars', year: 2018, genre_id: Genre.first(3).last.id}, { name: 'Lord of the Rings', year: 2001, genre_id: Genre.first(3).last.id}])
   movies = Movie.create([{ name: 'Star Wars', year: 2018, genre_id: Genre.first(4).last.id}, { name: 'Lord of the Rings', year: 2001, genre_id: Genre.first(4).last.id}])
-  movies = Movie.create([{ name: 'Star Wars', year: 2018, genre_id: Genre.last}, { name: 'Lord of the Rings', year: 2001, genre_id: Genre.last}])
